@@ -1,0 +1,29 @@
+stages:
+  - sonarqube
+
+variables:
+  SONARQUBE_HOST: "http://localhost:9000"   # Adresse de ton conteneur SonarQube
+  SONARQUBE_TOKEN: "votre_token_sonarqube"  # Token d'authentification
+
+sonarqube_analysis:
+  stage: sonarqube
+  image: sonarsource/sonar-scanner-cli:latest
+  tags:
+    - docker
+  before_script:
+    - echo "Démarrage de SonarQube analysis"
+  script:
+    - |
+      echo "Vérification de SonarQube sur ${SONARQUBE_HOST}"
+      sonar-scanner \
+        -Dsonar.projectKey="mon_projet" \
+        -Dsonar.sources=. \
+        -Dsonar.host.url="${SONARQUBE_HOST}" \
+        -Dsonar.login="${SONARQUBE_TOKEN}" \
+        -Dsonar.gitlab.project_id="$CI_PROJECT_ID" \
+        -Dsonar.gitlab.merge_request_iid="$CI_MERGE_REQUEST_IID" \
+        -Dsonar.gitlab.commit_sha="$CI_COMMIT_SHA"
+  only:
+    - merge_requests  # Exécute uniquement sur les MR
+
+

@@ -1,0 +1,52 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.2'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id "org.sonarqube" version "4.4.1.3373" // Remplace par la version la plus récente
+}
+
+group = 'com.chris'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '21'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
+	implementation 'org.liquibase:liquibase-core'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "starbase-back"              // Clé du projet
+		property "sonar.projectName", "StarbaseBack"            // Nom du projet
+		property "sonar.projectVersion", "1.0"                // Version
+		property "sonar.host.url", "http://localhost:9001"    // URL de SonarQube
+		property "sonar.login", "sqp_a9bf9b11f8cce3589cdb5eb1fe6878242c20c315"       // Token d'authentification
+		property "sonar.sourceEncoding", "UTF-8"
+	}
+}
+
